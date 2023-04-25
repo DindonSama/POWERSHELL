@@ -1,9 +1,12 @@
-$pathsender = 'C:\Program Files\Zabbix Agent 2'
-
 $return = $null
 $return = @()
 
-$query = Get-DhcpServerv4ScopeStatistics
+if (Get-Command -Name Get-DhcpServerv4ScopeStatistics -ea 0) {
+    $query = Get-DhcpServerv4ScopeStatistics
+}
+else {
+    exit
+}
 
 foreach ($item in $query) {
     $Object = $null
@@ -17,12 +20,12 @@ foreach ($item in $query) {
     $Return += $Object
 }
 
-$Return = ConvertTo-Json -Compress -InputObject @($return)
-$Return = $Return -replace '"', '\"'
-$Return = '\"' + $return + '\"'
-
 if (![string]::IsNullOrEmpty($return)) {
-    Set-Location $pathsender
+    $Return = ConvertTo-Json -Compress -InputObject @($return)
+    $Return = $Return -replace '"', '\"'
+    $Return = '\"' + $return + '\"'
+
+    Set-Location 'C:\Program Files\Zabbix Agent 2'
     .\zabbix_sender.exe -c .\zabbix_agent2.conf -k ResultsDhcpScope -o $Return
     Set-Location -
 }
