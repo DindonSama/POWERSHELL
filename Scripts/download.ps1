@@ -12,5 +12,5 @@ if (!(Test-Path "C:\Program Files\Zabbix Agent 2\zabbix_agent2.d")) {
     New-Item -ItemType Directory -Force -Path "C:\Program Files\Zabbix Agent 2\zabbix_agent2.d"
 }
 foreach ($LOOP_CONF in $CONF) {
-    Invoke-WebRequest "https://raw.githubusercontent.com/DindonSama/POWERSHELL/main/zabbix_agent2.d/$CONF.conf" -OutFile "C:\Program Files\Zabbix Agent 2\zabbix_agent2.d\$CONF.conf"
+    Invoke-WebRequest "https://raw.githubusercontent.com/DindonSama/POWERSHELL/main/zabbix_agent2.d/$LOOP_CONF.conf" -OutFile "C:\Program Files\Zabbix Agent 2\zabbix_agent2.d\$LOOP_CONF.conf"
 }

@@ -5,7 +5,7 @@ if (Get-Command -Name Get-DhcpServerv4ScopeStatistics -ea 0) {
     $query = Get-DhcpServerv4ScopeStatistics
 }
 else {
-    exit
+    Write-Output 'No dhcp server on this machine'
 }
 
 foreach ($item in $query) {
@@ -22,10 +22,8 @@ foreach ($item in $query) {
 
 if (![string]::IsNullOrEmpty($return)) {
     $Return = ConvertTo-Json -Compress -InputObject @($return)
-    $Return = $Return -replace '"', '\"'
-    $Return = '\"' + $return + '\"'
-
-    Set-Location 'C:\Program Files\Zabbix Agent 2'
-    .\zabbix_sender.exe -c .\zabbix_agent2.conf -k ResultsDhcpScope -o $Return
-    Set-Location -
+    Write-Host $return
+}
+else {
+    Write-Host "No dhcp scope on this machine"
 }
