@@ -1,5 +1,6 @@
-$return = $null
-$return = @()
+Param (
+    [Parameter(Position = 0, Mandatory = $False)][string]$action
+)
 
 if (Get-Command -Name Get-DhcpServerv4ScopeStatistics -ea 0) {
     $query = Get-DhcpServerv4ScopeStatistics
@@ -8,22 +9,45 @@ else {
     Write-Output 'No dhcp server on this machine'
 }
 
-foreach ($item in $query) {
-    $Object = $null
-    $Object = New-Object System.Object
-    $Object | Add-Member -type NoteProperty -Name ScopeId -Value $item.ScopeId.IPAddressToString
-    $Object | Add-Member -type NoteProperty -Name Free -Value $item.Free
-    $Object | Add-Member -type NoteProperty -Name InUse -Value $item.InUse
-    $Object | Add-Member -type NoteProperty -Name PercentageInUse -Value $item.PercentageInUse
-    $Object | Add-Member -type NoteProperty -Name Reserved -Value $item.Reserved
+$to_json = $null
+$to_json = @()
 
-    $Return += $Object
+function lld {
+    $to_json = $null
+    $to_json = @()
+    foreach ($item in $query) {
+        $Object = $null
+        $Object = New-Object System.Object
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.ScopeId}" -Value $item.ScopeId.IPAddressToString
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.Free}" -Value $item.Free
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.InUse}" -Value $item.InUse
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.PercentageInUse}" -Value $item.PercentageInUse
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.Reserved}" -Value $item.Reserved
+    
+        $to_json += $Object        
+    }
+
+    return ConvertTo-Json -Compress -InputObject @($to_json)
 }
 
-if (![string]::IsNullOrEmpty($return)) {
-    $Return = ConvertTo-Json -Compress -InputObject @($return)
-    Write-Host $return
+function full {
+    $query | foreach-object {
+        $data = [psobject]@{"Free" = [int]$_.Free;
+            "InUse"                = [int]$_.InUse;
+            "PercentageInUse"      = [int]$_.PercentageInUse;
+            "Reserved"             = [int]$_.Reserved
+        }
+        $to_json += @{[string]$_.ScopeId = $data }
+    }
+    return ConvertTo-Json $to_json -Compress
 }
-else {
-    Write-Host "No dhcp scope on this machine"
+
+switch ($action) {
+    "lld" {
+        Write-Host $(lld)
+    }
+    "full" {
+        Write-Host $(full)
+    }
+    Default { Write-Host "Syntax error: Use 'lld' or 'full' as first argument" }
 }
