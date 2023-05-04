@@ -13,4 +13,5 @@ if ($Feature) {
 }
 else {
     Write-Host "Syntax error: Use Name of Feature as first argument"
+    exit 1
 }

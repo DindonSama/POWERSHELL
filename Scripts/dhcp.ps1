@@ -7,6 +7,7 @@ if (Get-Command -Name Get-DhcpServerv4ScopeStatistics -ea 0) {
 }
 else {
     Write-Output 'No dhcp server on this machine'
+    exit 1
 }
 
 function lld {
@@ -46,5 +47,8 @@ switch ($action) {
     "full" {
         Write-Host $(full)
     }
-    Default { Write-Host "Syntax error: Use 'lld' or 'full' as first argument" }
+    Default { 
+        Write-Host "Syntax error: Use 'lld' or 'full' as first argument" 
+        exit 1
+    }
 }
