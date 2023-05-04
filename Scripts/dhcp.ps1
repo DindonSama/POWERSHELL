@@ -18,11 +18,11 @@ function lld {
     foreach ($item in $query) {
         $Object = $null
         $Object = New-Object System.Object
-        $Object | Add-Member -type NoteProperty -Name "{#DHCP.ScopeId}" -Value $item.ScopeId.IPAddressToString
-        $Object | Add-Member -type NoteProperty -Name "{#DHCP.Free}" -Value $item.Free
-        $Object | Add-Member -type NoteProperty -Name "{#DHCP.InUse}" -Value $item.InUse
-        $Object | Add-Member -type NoteProperty -Name "{#DHCP.PercentageInUse}" -Value $item.PercentageInUse
-        $Object | Add-Member -type NoteProperty -Name "{#DHCP.Reserved}" -Value $item.Reserved
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.SCOPEID}" -Value $item.ScopeId.IPAddressToString
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.FREE}" -Value $item.Free
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.INUSE}" -Value $item.InUse
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.PERCENTAGEINUSE}" -Value $item.PercentageInUse
+        $Object | Add-Member -type NoteProperty -Name "{#DHCP.RESERVED}" -Value $item.Reserved
     
         $to_json += $Object        
     }
