@@ -9,9 +9,6 @@ else {
     Write-Output 'No dhcp server on this machine'
 }
 
-$to_json = $null
-$to_json = @()
-
 function lld {
     $to_json = $null
     $to_json = @()
@@ -32,10 +29,10 @@ function lld {
 
 function full {
     $query | foreach-object {
-        $data = [psobject]@{"Free" = [int]$_.Free;
-            "InUse"                = [int]$_.InUse;
-            "PercentageInUse"      = [int]$_.PercentageInUse;
-            "Reserved"             = [int]$_.Reserved
+        $data = [psobject]@{"Free"            = [int]$_.Free;
+                            "InUse"           = [int]$_.InUse;
+                            "PercentageInUse" = [int]$_.PercentageInUse;
+                            "Reserved"        = [int]$_.Reserved
         }
         $to_json += @{[string]$_.ScopeId = $data }
     }
