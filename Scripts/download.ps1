@@ -1,4 +1,4 @@
-$SCRIPT = @('dhcp','hyperv','download')
+$SCRIPT = @('dhcp','hyperv','download','Feature')
 $CONF = @('General')
 
 if (!(Test-Path "C:\Program Files\Zabbix Agent 2\scripts")) {
