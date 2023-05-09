@@ -42,10 +42,10 @@ function full {
 
 switch ($action) {
     "lld" {
-        Write-Host $(lld)
+        return $(lld)
     }
     "full" {
-        Write-Host $(full)
+        return $(full)
     }
     Default { 
         Write-Host "Syntax error: Use 'lld' or 'full' as first argument" 
