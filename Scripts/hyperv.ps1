@@ -94,7 +94,7 @@ switch ($action) {
         Write-Host $(Make-LLD)
     }
     "full" {
-        Write-Host $(Get-FullJSON)
+        return $(Get-FullJSON)
     }
     Default {Write-Host "Syntax error: Use 'lld' or 'full' as first argument"}
 }

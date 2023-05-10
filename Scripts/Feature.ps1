@@ -15,12 +15,12 @@ function Function_ALL_Feature {
         if ($query.Name -EQ $i) {
             switch ($i) {
                 "DHCP" {
-                    $temp_DHCP = ConvertFrom-Json -InputObject $(Invoke-Expression "./dhcp.ps1 full")
+                    $temp_DHCP = "C:\Program Files\Zabbix Agent 2\scripts\dhcp.ps1 full" | ConvertFrom-Json
                     $temp_DHCP = @{$i = $temp_DHCP }
                     $result += $temp_DHCP
                 }
                 "Hyper-V" {
-                    $temp_HYPERV = ConvertFrom-Json -InputObject $(Invoke-Expression "./hyperv.ps1 full")
+                    $temp_HYPERV = "C:\Program Files\Zabbix Agent 2\scripts\hyperv.ps1 full" | ConvertFrom-Json
                     $temp_HYPERV = @{$i = $temp_HYPERV }
                     $result += $temp_HYPERV
                 }
