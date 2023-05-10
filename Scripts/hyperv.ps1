@@ -91,7 +91,7 @@ function Get-FullJSON() {
 # Main switch
 switch ($action) {
     "lld" {
-        Write-Host $(Make-LLD)
+        return $(Make-LLD)
     }
     "full" {
         return $(Get-FullJSON)
