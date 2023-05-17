@@ -1,6 +1,8 @@
 $SCRIPT = @('dhcp','hyperv','download','Feature')
 $CONF = @('General')
 
+[Net.ServicePointManager]::SecurityProtocol = [net.SecurityProtocolType]::Tls12
+
 if (!(Test-Path "C:\Program Files\Zabbix Agent 2\scripts")) {
     New-Item -ItemType Directory -Force -Path "C:\Program Files\Zabbix Agent 2\scripts"
 }
