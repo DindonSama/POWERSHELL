@@ -15,17 +15,16 @@
     Print verion number and exit.
 
     .EXAMPLE
-    zbx-hyperv.ps1 lld
-    {"data":[{"{#VM.NAME}":"vm01","{#VM.VERSION}":"5.0","{#VM.CLUSTERED}":0,"{#VM.HOST}":"hv01","{#VM.GEN}":2,"{#VM.ISREPLICA}":0}
+    hyperv.ps1 lld
+    {"data":[{"{#VM.NAME}":"Windows 10 MSIX packaging environment","{#VM.VERSION}":"11.0","{#VM.CLUSTERED}":0,"{#VM.HOST}":"SERVEUR","{#VM.GEN}":2,"{#VM.ISREPLICA}":0,"{#VM.NOTES}":""}]}
 
     .EXAMPLE
-    zbx-hyperv.ps1 full
-    {"vm01":{"IntegrationServicesState":"","MemoryAssigned":0,"IntegrationServicesVersion":"","NumaSockets":1,"Uptime":0,"State":3,
-    "NumaNodes":1,"CPUUsage":0,"Status":"Operating normally","ReplicationHealth":0,"ReplicationState":0}, ...}
+    hyperv.ps1 full
+    {"Windows 10 MSIX packaging environment":{"NumaSockets":1,"ReplMode":0,"CritErrAction":1,"IntSvcState":2,"ReplHealth":0,"State":3,"ReplState":0,"NumaNodes":1,"CPUUsage":0,"IntSvcVer":"0.0","StartAction":3,"IsClustered":0,"Uptime":0,"Memory":0,"StopAction":3}}
     
     .NOTES
-    Author: Khatsayuk Alexander
-    Github: https://github.com/asand3r/
+    Author: Dindon_Sama
+    Github: https://github.com/DindonSama
 #>
 
 Param (
@@ -33,11 +32,9 @@ Param (
     [Parameter(Position=0,Mandatory=$False)][string]$action
 )
 
-# Script version
-$VERSION_NUM="0.2.4"
-if ($version) {
-    Write-Host $VERSION_NUM
-    break
+if (!(Get-Command -Name Get-VM -ea 0)) {
+    Write-Output 'No HyperV server on this machine'
+    exit 1
 }
 
 # Low-Level Discovery function

@@ -24,6 +24,11 @@ function Function_ALL_Feature {
                     $temp_HYPERV = @{$i = $temp_HYPERV }
                     $result += $temp_HYPERV
                 }
+                "AD-domain-services" {
+                    $temp_AD = ConvertFrom-Json -InputObject $(& 'C:\Program Files\Zabbix Agent 2\scripts\AD.ps1' full)
+                    $temp_AD = @{$i = $temp_AD }
+                    $result += $temp_AD
+                }
                 Default {}
             }
         }
