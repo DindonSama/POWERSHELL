@@ -27,7 +27,7 @@ if ($response.statuscode -eq '200') {
         }
     }
     if ($RESTART -eq '1') {
-        Restart-Service "Zabbix Agent 2" -Force
+        Restart-Service "Zabbix Agent 2" -Force | Out-Null
     }
     $keyValue= ConvertFrom-Json $response.Content | Select-Object -expand "sha"
     Write-Output $keyValue
