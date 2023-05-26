@@ -17,10 +17,18 @@ if ($response.statuscode -eq '200') {
     if (!(Test-Path "C:\Program Files\Zabbix Agent 2\zabbix_agent2.d")) {
         New-Item -ItemType Directory -Force -Path "C:\Program Files\Zabbix Agent 2\zabbix_agent2.d"
     }
+    
     foreach ($LOOP_CONF in $CONF) {
+        $OHASH = $(Get-FileHash "C:\Program Files\Zabbix Agent 2\zabbix_agent2.d\$LOOP_CONF.conf").hash
         Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/DindonSama/POWERSHELL/main/zabbix_agent2.d/$LOOP_CONF.conf" -OutFile "C:\Program Files\Zabbix Agent 2\zabbix_agent2.d\$LOOP_CONF.conf"
+        $DHASH = $(Get-FileHash "C:\Program Files\Zabbix Agent 2\zabbix_agent2.d\$LOOP_CONF.conf").hash
+        if ($OHASH -ne $DHASH){
+            $RESTART = 1
+        }
     }
-
+    if ($RESTART -eq '1') {
+        Restart-Service "Zabbix Agent 2" -Force
+    }
     $keyValue= ConvertFrom-Json $response.Content | Select-Object -expand "sha"
     Write-Output $keyValue
 }
