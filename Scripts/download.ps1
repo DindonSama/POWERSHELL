@@ -1,9 +1,9 @@
 $SCRIPT = @('AD','dhcp','download','Feature','hyperv')
 $CONF = @('General')
 
-$response = Invoke-WebRequest -Uri "https://api.github.com/repos/DindonSama/POWERSHELL/commits/main"
-
 [Net.ServicePointManager]::SecurityProtocol = [net.SecurityProtocolType]::Tls12
+
+$response = Invoke-WebRequest -Uri "https://api.github.com/repos/DindonSama/POWERSHELL/commits/main"
 
 if ($response.statuscode -eq '200') {
 
