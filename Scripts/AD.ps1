@@ -28,8 +28,8 @@ function lld {
 
 function full {
     $query | foreach-object {
-        $data = [psobject]@{"DomainMode"      = [int]$_.DomainMode;
-                            "Name"            = [int]$_.Name
+        $data = [psobject]@{"DomainMode"      = [string]$_.DomainMode;
+                            "Name"            = [string]$_.Name
         }
         $to_json += @{[string]$_.Forest = $data }
     }
