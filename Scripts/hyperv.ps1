@@ -33,7 +33,7 @@ Param (
 )
 
 if (!(Get-Command -Name Get-VM -ea 0)) {
-    Write-Output 'No HyperV server on this machine'
+    Write-Output '{No HyperV server on this machine}'
     exit 1
 }
 

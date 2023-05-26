@@ -6,7 +6,7 @@ if (Get-Command -Name Get-ADDomain -ea 0) {
     $query = Get-ADDomain
 }
 else {
-    Write-Output 'No AD server on this machine'
+    Write-Output '{No AD server on this machine}'
     exit 1
 }
 

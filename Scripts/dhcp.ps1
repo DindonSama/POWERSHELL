@@ -6,7 +6,7 @@ if (Get-Command -Name Get-DhcpServerv4ScopeStatistics -ea 0) {
     $query = Get-DhcpServerv4ScopeStatistics
 }
 else {
-    Write-Output 'No dhcp server on this machine'
+    Write-Output '{No dhcp server on this machine}'
     exit 1
 }
 
