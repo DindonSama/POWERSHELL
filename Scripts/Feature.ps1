@@ -7,7 +7,7 @@ function Function_Feature {
     return ConvertTo-Json $query -Compress
 }
 function Function_ALL_Feature {
-    $Feature = @('DHCP', 'Hyper-V')
+    $Feature = @('DHCP', 'Hyper-V', 'AD-domain-services')
     $query = $(Get-WindowsFeature | Where-Object { ($_.InstallState -EQ "Installed") } | Select-Object Name)
     $result = $null
     $result = @()
