@@ -26,7 +26,7 @@ function Function_ALL_Feature {
                 }
                 "AD-domain-services" {
                     $temp_AD = ConvertFrom-Json -InputObject $(& 'C:\Program Files\Zabbix Agent 2\scripts\AD.ps1' full)
-                    $temp_AD = @{$i = $temp_AD }
+                    $temp_AD = @{AD = $temp_AD }
                     $result += $temp_AD
                 }
                 Default {}
