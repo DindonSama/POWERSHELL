@@ -26,6 +26,15 @@ function lld {
     return ConvertTo-Json -Compress -InputObject @($to_json)
 }
 
+function ADUserInactive {
+    $InactiveDays = 90
+    $Days = (Get-Date).Adddays(-($InactiveDays))
+
+    $ADUserInactiveList = Get-ADUser -Filter {LastLogonTimeStamp -lt $Days -and enabled -eq $true} -Properties LastLogonTimeStamp | Sort-Object -Property LastLogonTimeStamp | select-object SamAccountName,Name,@{Name="Date"; Expression={[DateTime]::FromFileTime($_.lastLogonTimestamp).ToString('MM-dd-yyyy')}}
+
+    return ConvertTo-Json -Compress -InputObject @($ADUserInactiveList)
+}
+
 function full {
     $query | foreach-object {
         $data = [psobject]@{"DomainMode"      = [string]$_.DomainMode;
@@ -43,6 +52,9 @@ switch ($action) {
     }
     "full" {
         return $(full)
+    }
+    "aduserinactive" {
+        return $(ADUserInactive)
     }
     Default { 
         Write-Host "Syntax error: Use 'lld' or 'full' as first argument" 
