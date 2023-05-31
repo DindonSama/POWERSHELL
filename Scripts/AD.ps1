@@ -32,7 +32,17 @@ function ADUserInactive {
 
     $ADUserInactiveList = Get-ADUser -Filter {LastLogonTimeStamp -lt $Days -and enabled -eq $true} -Properties LastLogonTimeStamp | Sort-Object -Property LastLogonTimeStamp | select-object SamAccountName,Name,@{Name="Date"; Expression={[DateTime]::FromFileTime($_.lastLogonTimestamp).ToString('MM-dd-yyyy')}}
 
-    return ConvertTo-Json -Compress -InputObject @($ADUserInactiveList)
+    $to_json = $null
+    $to_json = @()
+    
+    $ADUserInactiveList | foreach-object {
+        $data = [psobject]@{"SamAccountName"        = [string]$_.SamAccountName;
+                            "Name"                  = [string]$_.Name;
+                            "Date"                  = [string]$_.Date
+        }
+        $to_json += @{[string]$_.ADUserInactive = $data }
+    }
+    return ConvertTo-Json -Compress -InputObject @($to_json)
 }
 
 function full {
