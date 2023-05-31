@@ -13,6 +13,7 @@ else {
 function lld {
     $to_json = $null
     $to_json = @()
+    
     foreach ($item in $query) {
         $Object = $null
         $Object = New-Object System.Object
@@ -26,26 +27,27 @@ function lld {
     return ConvertTo-Json -InputObject $to_json -Compress
 }
 
-function F_ADUserInactif {
+function F1 {
+    $to_json = $null
     $InactiveDays = 90
     $Days = (Get-Date).Adddays(-($InactiveDays))
 
     $ADUserInactifList = Get-ADUser -Filter {LastLogonTimeStamp -lt $Days -and enabled -eq $true} -Properties LastLogonTimeStamp | Sort-Object -Property LastLogonTimeStamp | select-object SamAccountName,Name,@{Name="Date"; Expression={[DateTime]::FromFileTime($_.lastLogonTimestamp).ToString('MM-dd-yyyy')}}
-
-    $raw_json = $null
-    $raw_json = @()
     
     $ADUserInactifList | foreach-object {
         $data = [psobject]@{"SamAccountName"        = [string]$_.SamAccountName;
                             "Name"                  = [string]$_.Name;
                             "Date"                  = [string]$_.Date
         }
-        $raw_json += @{ADUserInactif = $data }
+        $to_json += @{[string]$_.SamAccountName = $data }
     }
-    return $raw_json
+
+    return ConvertTo-Json -InputObject $to_json -Compress
 }
 
 function full {
+    $to_json = $null
+
     $query | foreach-object {
         $data = [psobject]@{"DomainMode"      = [string]$_.DomainMode;
                             "Forest"          = [string]$_.Forest;
@@ -53,7 +55,10 @@ function full {
         }
         $to_json += @{[string]$_.Forest = $data }
     }
-    $to_json += @{ADUserInactif = (F_ADUserInactif)}
+
+    $temp_F1 = ConvertFrom-Json -InputObject $(F1)
+    $to_json += @{ADUserInactif = $temp_F1 }
+
     return ConvertTo-Json -InputObject $to_json -Compress
 }
 
@@ -65,7 +70,7 @@ switch ($action) {
         return $(full)
     }
     "aduserinactif" {
-        return $(F_ADUserInactif)
+        return $(F1)
     }
     Default { 
         Write-Host "Syntax error: Use 'lld' or 'full' or 'aduserinactif' as first argument" 
