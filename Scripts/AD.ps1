@@ -23,26 +23,26 @@ function lld {
         $to_json += $Object        
     }
 
-    return ConvertTo-Json -Compress -InputObject @($to_json)
+    return ConvertTo-Json -InputObject $to_json -Compress
 }
 
-function ADUserInactive {
+function F_ADUserInactif {
     $InactiveDays = 90
     $Days = (Get-Date).Adddays(-($InactiveDays))
 
-    $ADUserInactiveList = Get-ADUser -Filter {LastLogonTimeStamp -lt $Days -and enabled -eq $true} -Properties LastLogonTimeStamp | Sort-Object -Property LastLogonTimeStamp | select-object SamAccountName,Name,@{Name="Date"; Expression={[DateTime]::FromFileTime($_.lastLogonTimestamp).ToString('MM-dd-yyyy')}}
+    $ADUserInactifList = Get-ADUser -Filter {LastLogonTimeStamp -lt $Days -and enabled -eq $true} -Properties LastLogonTimeStamp | Sort-Object -Property LastLogonTimeStamp | select-object SamAccountName,Name,@{Name="Date"; Expression={[DateTime]::FromFileTime($_.lastLogonTimestamp).ToString('MM-dd-yyyy')}}
 
-    $to_json = $null
-    $to_json = @()
+    $raw_json = $null
+    $raw_json = @()
     
-    $ADUserInactiveList | foreach-object {
+    $ADUserInactifList | foreach-object {
         $data = [psobject]@{"SamAccountName"        = [string]$_.SamAccountName;
                             "Name"                  = [string]$_.Name;
                             "Date"                  = [string]$_.Date
         }
-        $to_json += @{[string]$_.ADUserInactive = $data }
+        $raw_json += @{ADUserInactif = $data }
     }
-    return ConvertTo-Json -Compress -InputObject @($to_json)
+    return $raw_json
 }
 
 function full {
@@ -53,7 +53,8 @@ function full {
         }
         $to_json += @{[string]$_.Forest = $data }
     }
-    return ConvertTo-Json $to_json -Compress
+    $to_json += @{ADUserInactif = (F_ADUserInactif)}
+    return ConvertTo-Json -InputObject $to_json -Compress
 }
 
 switch ($action) {
@@ -63,11 +64,11 @@ switch ($action) {
     "full" {
         return $(full)
     }
-    "aduserinactive" {
-        return $(ADUserInactive)
+    "aduserinactif" {
+        return $(F_ADUserInactif)
     }
     Default { 
-        Write-Host "Syntax error: Use 'lld' or 'full' as first argument" 
+        Write-Host "Syntax error: Use 'lld' or 'full' or 'aduserinactif' as first argument" 
         exit 1
     }
 }
