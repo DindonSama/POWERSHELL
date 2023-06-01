@@ -44,6 +44,23 @@ function F1 {
 
     return ConvertTo-Json -InputObject $to_json -Compress
 }
+function F2 {
+    $to_json = $null
+    $InactiveDays = 90
+    $Days = (Get-Date).Adddays(-($InactiveDays))
+
+    $ADCInactifList = Get-ADcomputer -Filter 'lastLogondate -lt $Days' -properties Name,canonicalName,lastlogondate | Sort-Object -Property lastlogondate | Select-Object Name,canonicalname,lastlogondate
+        
+    $ADCInactifList | foreach-object {
+        $data = [psobject]@{"name"            = [string]$_.name;
+                            "canonicalname"   = [string]$_.canonicalname;
+                            "lastlogondate"   = [string]$_.lastlogondate
+        }
+        $to_json += @{[string]$_.name = $data }
+    }
+
+    return ConvertTo-Json -InputObject $to_json -Compress
+}
 
 function full {
     $to_json = $null
@@ -58,6 +75,8 @@ function full {
 
     $temp_F1 = ConvertFrom-Json -InputObject $(F1)
     $to_json += @{ADUserInactif = $temp_F1 }
+    $temp_F2 = ConvertFrom-Json -InputObject $(F2)
+    $to_json += @{ADComputerInactif = $temp_F2 }
 
     return ConvertTo-Json -InputObject $to_json -Compress
 }
