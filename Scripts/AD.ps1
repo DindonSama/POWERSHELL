@@ -32,7 +32,7 @@ function F1 {
     $InactiveDays = 90
     $Days = (Get-Date).Adddays(-($InactiveDays))
 
-    $ADUserInactifList = Get-ADUser -Filter {LastLogonTimeStamp -lt $Days -and enabled -eq $true} -Properties LastLogonTimeStamp | Sort-Object -Property LastLogonTimeStamp | select-object SamAccountName,Name,@{Name="Date"; Expression={[DateTime]::FromFileTime($_.lastLogonTimestamp).ToString('MM-dd-yyyy')}}
+    $ADUserInactifList = Get-ADUser -Filter {LastLogonTimeStamp -lt $Days -and enabled -eq $true} -Properties LastLogonTimeStamp | Sort-Object -Property LastLogonTimeStamp | select-object SamAccountName,Name,@{Name="Date"; Expression={[DateTime]::FromFileTime($_.lastLogonTimestamp).ToString('dd-MM-yyyy')}}
     
     $ADUserInactifList | foreach-object {
         $data = [psobject]@{"SamAccountName"        = [string]$_.SamAccountName;
